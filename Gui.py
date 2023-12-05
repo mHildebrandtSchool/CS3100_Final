@@ -18,21 +18,14 @@ class Gui():
         self.gui.columnconfigure(0, weight=1)
         self.gui.rowconfigure(0, weight=1)
 
-    def create_menu(self):
-        menubar = Menu(self.gui)
-        menu_file = Menu(menubar)
-        menu_edit = Menu(menubar)
-        menubar.add_cascade(menu=menu_file, label='File')
-        menubar.add_cascade(menu=menu_edit, label='Edit')
-        self.gui.config(menu = menubar)
-
     def set_screen_size(self, width_str):
-        self.gui.geometry(f"+{int(self.screen_width / 2)}+{int(self.screen_height / 3)}")
+        self.gui.geometry(f"+{int(self.screen_width/ 3)}+{int(self.screen_height / 4)}")
         self.gui.geometry(width_str)
+        #self.gui.eval('tk::PlaceWindow')
 
-    def build_page(self, screen_size, menu_enabled, px, py):
+
+    def build_page(self, screen_size, px, py):
         self.set_screen_size(screen_size)
         self.create_mainframe(px, py)
-        if(menu_enabled):
-            self.create_menu()
+
     

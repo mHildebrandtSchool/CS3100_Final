@@ -50,8 +50,8 @@ class LoginGui(Gui):
         window = RegisterWindow()
     
     
-    def build_page(self, screen_size, menu_enabled, px, py):
-        super().build_page(screen_size, menu_enabled, px, py)
+    def build_page(self, screen_size, px, py):
+        super().build_page(screen_size, px, py)
         self.add_static_labels()
         self.add_entry_fields()
         self.add_buttons()
@@ -72,20 +72,21 @@ class LoginGui(Gui):
     
     def do_login(self):
         #usernames are unique so search for the username entry
-        sql = f"SELECT user_username, user_full_name, user_pass_salt, user_pass_hash FROM users WHERE user_username = '{self.username.get()}'"
+        sql = f"SELECT rowid, user_username, user_full_name, user_pass_salt, user_pass_hash FROM users WHERE user_username = '{self.username.get()}'"
         try:
             response = db.cursor.execute(sql)
             user_data = response.fetchone()
             if user_data is not None:
                 #hash the given user password with the salt in the database
                 password = self.password.get()
-                salt = user_data[2]
+                salt = user_data[3]
                 current_password_hash = hashlib.sha512(str(password + salt).encode('utf-8')).hexdigest()
                 #if given pass matches saved pass
-                if user_data[3] == current_password_hash:
+                if user_data[4] == current_password_hash:
                     #set session variables
-                    self.session.active_username = user_data[0]
-                    self.session.active_full_name = user_data[1]
+                    self.session.active_user_id = user_data[0]
+                    self.session.active_username = user_data[1]
+                    self.session.active_full_name = user_data[2]
                     #end the login gui
                     self.gui.destroy()
                     return True

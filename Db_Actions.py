@@ -32,6 +32,12 @@ class Db_Actions():
         self.cursor.execute(sql)
         self.connection.commit()
 
+    def get_tabel_data(self, active_user_id = 1):
+        sql = f"SELECT * FROM notes WHERE fk_user_id = {active_user_id}"
+        self.cursor.execute(sql)
+        data = self.cursor.fetchall()
+        return data
+
 
     
         
