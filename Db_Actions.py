@@ -1,5 +1,5 @@
 import sqlite3
-from BasicFunctions import BasicFunctions as f
+
 
 
 class Db_Actions():
@@ -33,10 +33,24 @@ class Db_Actions():
         self.connection.commit()
 
     def get_tabel_data(self, active_user_id = 1):
-        sql = f"SELECT * FROM notes WHERE fk_user_id = {active_user_id}"
+        sql = f"""SELECT
+                    note_id, 
+                    note_text, 
+                    note_password, 
+                    note_site_name, 
+                    note_last_mod_date, 
+                    note_create_date 
+                    FROM notes 
+                    WHERE fk_user_id = {active_user_id}"""
         self.cursor.execute(sql)
         data = self.cursor.fetchall()
         return data
+    
+    def queue_to_db(self, save_queue):
+        while save_queue.list.head is not None:
+            sql = save_queue.dequeue()
+            self.cursor.execute(sql)
+            self.connection.commit()
 
 
     

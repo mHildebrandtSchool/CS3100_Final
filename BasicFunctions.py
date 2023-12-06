@@ -2,6 +2,8 @@ import re
 #Salt and hash requirments idea from: https://stackoverflow.com/questions/9594125/salt-and-hash-a-password-in-python
 import hashlib, uuid
 from Node import Node
+from datetime import date
+
 
 class BasicFunctions():
         
@@ -19,19 +21,16 @@ class BasicFunctions():
         if salt is None:
             salt = uuid.uuid4().hex
         
-        if BasicFunctions.check_regex(password):
+        if self.check_regex(password):
             salty_hash = hashlib.sha512(str(password + salt).encode('utf-8')).hexdigest()
             return (salt, salty_hash)
         else:
             return False
-        
-    def print_shit(a, b):
-        print(a, b)
 
-    def create_row_node(self, note_id, user_id, note_text, note_password, site_name, last_mod, create_date):
+    def create_row_node(self, note_id, note_text, note_password, site_name, last_mod, create_date, row_id):
         row_dict = {
             'note_id': note_id,
-            'fk_user_id': user_id, 
+            'note_row_id': str(row_id),
             'note_text': note_text,
             'note_password': note_password,
             'note_site_name': site_name,
@@ -41,5 +40,14 @@ class BasicFunctions():
         new_node = Node(row_dict)
         return new_node
     
-    def refresh_tabel(self, mainframe):
-        mainframe.destroy()
+    def num_rows_list(self, num_rows):
+        row_nums = []
+        for row_num in range(1, num_rows + 1):
+            row_num_str = str(row_num)
+            row_nums.append(row_num_str)
+        return tuple(row_nums)
+    
+    def get_now_time(self):
+        current_date = date.today()
+        current_date.isoformat()
+        return current_date.strftime("%m/%d/%y")

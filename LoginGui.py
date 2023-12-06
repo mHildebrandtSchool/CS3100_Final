@@ -5,6 +5,8 @@ from Db_Actions import Db_Actions
 from BasicFunctions import BasicFunctions
 import hashlib
 import re
+
+
 functions = BasicFunctions()
 db = Db_Actions()
 class LoginGui(Gui):
@@ -22,8 +24,10 @@ class LoginGui(Gui):
         Label(self.mainframe, text='Password: ').grid(column=1, row=3, sticky=(W, N))
         Label(self.mainframe, text='Click to register account-> ',
                                 fg='Blue', bg="light blue").grid(column=1, row=4, columnspan=2, sticky=(W))
-        self.error_label_character = Label(self.mainframe, text="Only use a-z, A-Z, numbers 0-9, and no whitespace", foreground="white", bg="red")
-        self.error_label_login = Label(self.mainframe, text="Incorrect Username or Password. Please Try Again.", foreground="white", bg="red")
+        self.error_label_character = Label(self.mainframe, text="Only use a-z, A-Z, numbers 0-9, and \n  special characters: ._~()'!*:@,+?-]", 
+                                           foreground="white", bg="red")
+        self.error_label_login = Label(self.mainframe, text="Incorrect Username or Password. Please Try Again.", 
+                                       foreground="white", bg="red")
 
 
 
@@ -72,7 +76,14 @@ class LoginGui(Gui):
     
     def do_login(self):
         #usernames are unique so search for the username entry
-        sql = f"SELECT rowid, user_username, user_full_name, user_pass_salt, user_pass_hash FROM users WHERE user_username = '{self.username.get()}'"
+        sql = f"""SELECT 
+                    rowid, 
+                    user_username, 
+                    user_full_name, 
+                    user_pass_salt, 
+                    user_pass_hash 
+                    FROM users 
+                    WHERE user_username = '{self.username.get()}'"""
         try:
             response = db.cursor.execute(sql)
             user_data = response.fetchone()
@@ -86,7 +97,7 @@ class LoginGui(Gui):
                     #set session variables
                     self.session.active_user_id = user_data[0]
                     self.session.active_username = user_data[1]
-                    self.session.active_full_name = user_data[2]
+                    self.session.active_full_name = user_data[2].split(' ')[0]
                     #end the login gui
                     self.gui.destroy()
                     return True
@@ -116,7 +127,8 @@ class RegisterWindow(Window):
         Label(self.mainframe, text='Username: ').grid(column=1, row=5, sticky=(E))
         Label(self.mainframe, text=' ').grid(column=1, row=6, sticky=(E))
         Label(self.mainframe, text='Password: ').grid(column=1, row=7, sticky=(E))
-        self.error_label = Label(self.mainframe, text="Only use a-z, A-Z, numbers 0-9\n or special characters: \n ._~()'!*:@,+?-", foreground="white", bg="red")
+        self.error_label = Label(self.mainframe, text="Only use a-z, A-Z, numbers 0-9\n or special characters: \n ._~()'!*:@,+?-", 
+                                 foreground="white", bg="red")
 
 
     def add_entries(self):
