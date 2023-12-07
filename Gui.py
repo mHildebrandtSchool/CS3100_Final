@@ -23,6 +23,8 @@ class Gui():
         self.gui.geometry(width_str)
         #self.gui.eval('tk::PlaceWindow')
 
+    def close_window(self):
+        self.gui.destroy()
 
     def build_page(self, screen_size, px, py):
         self.set_screen_size(screen_size)

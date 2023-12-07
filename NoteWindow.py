@@ -90,16 +90,16 @@ class NoteWindow(Window):
                 '{f.get_now_time()}', 
                 '{f.get_now_time()}')"""
         self.save_queue.enqueue(sql)
-        self.session.main_gui.refresh_table()
         self.window.destroy()
+        self.session.main_gui.refresh_table()
     
     def delete_data(self):
         deleted_note_id = self.row_list.delete(self.row_index)
         #Queue SQL Statment for deleting a row
         sql = f"DELETE FROM notes WHERE note_id = {deleted_note_id}"
         self.save_queue.enqueue(sql)
-        self.session.main_gui.refresh_table()
         self.window.destroy()
+        self.session.main_gui.refresh_table()
 
     def modify_data(self):
         row_data = self.row_list.search_index(self.row_index)
@@ -117,5 +117,6 @@ class NoteWindow(Window):
                  WHERE note_id = {row_data.data['note_id']}
                 """
         self.save_queue.enqueue(sql)
-        self.session.main_gui.refresh_table()
         self.window.destroy()
+        self.session.main_gui.refresh_table()
+        

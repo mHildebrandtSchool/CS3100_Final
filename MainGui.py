@@ -15,7 +15,7 @@ db = Db_Actions()
 f = BasicFunctions()
 class MainGui(Gui):
 
-    def __init__(self, session):
+    def __init__(self, session, check):
         super().__init__("Passwords")
         self.session = session
         self.row_list = LinkedList()
@@ -23,6 +23,8 @@ class MainGui(Gui):
         self.row_data = []
         self.search_string = StringVar()
         self.save_queue = Queue()
+        self.program_running = check
+        
         
         
         
@@ -44,18 +46,23 @@ class MainGui(Gui):
         menubar = Menu(self.gui)
         menu_file = Menu(menubar)
         menu_edit = Menu(menubar)
+        menu_sort = Menu(menubar)
 
         menubar.add_cascade(menu=menu_file, label='Options')
-        menu_edit.add_command(label='Save', command=self.save_data)
+        menu_file.add_command(label='Save', command=self.save_data)
+        menu_file.add_command(label='Logout', command=self.logout_user)
 
         menubar.add_cascade(menu=menu_edit, label='Edit')
         menu_edit.add_command(label='Add', command=self.add_entry)
         menu_edit.add_command(label='Delete', command=lambda: self.row_select_popup('delete'))
         menu_edit.add_command(label='Modify', command=lambda: self.row_select_popup('modify'))
-        menu_edit.add_command(label='Sort Alpha', command=lambda: self.sort_table('note_site_name'))
-        menu_edit.add_command(label='Sort RowID', command=lambda: self.sort_table('note_row_id'))
+        
 
-        menu_sort = Menu(menubar)
+        menubar.add_cascade(menu=menu_sort, label='Sort')
+        menu_sort.add_command(label='Sort Alpha', command=lambda: self.sort_table('note_site_name'))
+        menu_sort.add_command(label='Sort RowID', command=lambda: self.sort_table('note_row_id'))
+    
+        
         
         
         #menubar.add_cascade(menu=menu_sort, label='Sort', command=self.sort_table)
@@ -137,6 +144,9 @@ class MainGui(Gui):
         self.create_mainframe(10, 5)
         self.add_statics()
         self.add_table()
+
+    def logout_user(self):
+        self.close_window()
 
         
 
